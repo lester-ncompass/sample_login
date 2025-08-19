@@ -1,30 +1,14 @@
-# Build stage
-FROM node:20-alpine as build
+# Use an official Python runtime as a base image
+FROM python:3.10-alpine
+
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copy the current directory contents into the container at /app
+COPY . /app
 
-# Install dependencies
-RUN npm install
+# Make port 8080 available to the world outside this container
+EXPOSE 8080
 
-# Copy source files
-COPY . .
-
-# Build the app (if needed)
-# RUN npm run build
-
-# Production stage
-FROM nginx:alpine
-
-# Copy built files from build stage
-COPY --from=build /app /usr/share/nginx/html
-
-# Copy nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Expose port 80
-EXPOSE 80
-
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Define command to run app
+CMD ["python", "-m", "http.server", "8080"]
