@@ -2,81 +2,319 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Auth0 Simple Integration</title>
     <style>
-      *{margin:0;padding:0;box-sizing:border-box}
-      body{
-        font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
-        min-height:100vh;display:flex;align-items:center;justify-content:center;color:#333
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
-      .container{
-        background:#fff;padding:2rem;border-radius:14px;
-        box-shadow:0 10px 30px rgba(0,0,0,.2);max-width:520px;width:94%;
-        display:flex;flex-direction:column;gap:1rem
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #333;
       }
-      .logo{font-size:1.8rem;font-weight:800;color:#667eea}
-      .config-warning{
-        background:#fff3cd;border:1px solid #ffeaa7;color:#856404;
-        padding:1rem;border-radius:10px;font-size:.9rem
+      .container {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 14px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        max-width: 720px;
+        width: 94%;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
       }
-      .btn{
-        background:#667eea;color:#fff;border:none;padding:10px 16px;border-radius:8px;
-        cursor:pointer;font-size:.95rem;transition:.2s;margin-top:.25rem
+      .logo {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #667eea;
       }
-      .btn:hover{background:#5a67d8}
-      .btn.secondary{background:#1118271a;color:#111827}
-      .loading{display:inline-block;width:18px;height:18px;border:2px solid #f3f3f3;
-        border-top:2px solid #667eea;border-radius:50%;animation:spin 1s linear infinite;margin-right:6px}
-      @keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
-      .user-avatar{width:52px;height:52px;border-radius:50%;border:3px solid #667eea}
-      .kv{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9rem}
-      textarea{
-        width:100%;min-height:90px;padding:.75rem;border-radius:10px;border:1px solid #e5e7eb;
-        background:#fff;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9rem;resize:vertical
+      .config-warning {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        color: #856404;
+        padding: 1rem;
+        border-radius: 10px;
+        font-size: 0.9rem;
       }
-      .muted{color:#6b7280;font-size:.85rem}
-      .row{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
-      .pill{display:inline-block;background:#eef2ff;color:#4f46e5;border:1px solid #e0e7ff;border-radius:999px;padding:.2rem .55rem;font-size:.75rem}
+      .btn {
+        background: #667eea;
+        color: #fff;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        transition: 0.2s;
+        margin-top: 0.25rem;
+      }
+      .btn:hover {
+        background: #5a67d8;
+      }
+      .btn.secondary {
+        background: #1118271a;
+        color: #111827;
+      }
+      .btn.ghost {
+        background: transparent;
+        border: 1px dashed #cbd5e1;
+        color: #334155;
+      }
+      .loading {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border: 2px solid #f3f3f3;
+        border-top: 2px solid #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-right: 6px;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .user-avatar {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        border: 3px solid #667eea;
+      }
+      .kv {
+        font-family: ui-monospace, Menlo, Consolas, monospace;
+        font-size: 0.9rem;
+      }
+      textarea {
+        width: 100%;
+        min-height: 90px;
+        padding: 0.75rem;
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        font-family: ui-monospace, Menlo, Consolas, monospace;
+        font-size: 0.9rem;
+        resize: vertical;
+      }
+      .muted {
+        color: #6b7280;
+        font-size: 0.85rem;
+      }
+      .row {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .pill {
+        display: inline-block;
+        background: #eef2ff;
+        color: #4f46e5;
+        border: 1px solid #e0e7ff;
+        border-radius: 999px;
+        padding: 0.2rem 0.55rem;
+        font-size: 0.75rem;
+      }
+      /* Additions for the code-flow builder */
+      .card {
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 1rem;
+        background: #fafafa;
+      }
+      .grid {
+        display: grid;
+        gap: 0.75rem;
+      }
+      .grid-2 {
+        grid-template-columns: 1fr 1fr;
+      }
+      .section-title {
+        color: #4f46e5;
+        font-weight: 700;
+      }
+      .hint {
+        font-size: 0.8rem;
+        color: #64748b;
+      }
+      .ok {
+        color: #10b981;
+      }
+      .bad {
+        color: #ef4444;
+      }
+      .nowrap {
+        white-space: nowrap;
+      }
+      input[type="text"],
+      input[type="url"] {
+        width: 100%;
+        min-height: auto;
+        padding: 0.6rem;
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        font-size: 0.9rem;
+      }
     </style>
   </head>
   <body>
     <div class="container">
       <div class="logo">🔐 Auth0 Demo</div>
 
-      <div id="config-warning" class="config-warning" style="display:none">
-        <strong>Warning:</strong> Please update <code>auth0Config</code> below with your Auth0 Domain and Client ID.
+      <div id="config-warning" class="config-warning" style="display: none">
+        <strong>Warning:</strong> Please update <code>auth0Config</code> below
+        with your Auth0 Domain and Client ID.
       </div>
 
-      <div id="loading" style="display:none"><span class="loading"></span>Initializing…</div>
+      <div id="loading" style="display: none">
+        <span class="loading"></span>Initializing…
+      </div>
 
-      <div id="login-section" style="display:block">
+      <!-- ORIGINAL LOGIN (kept exactly, plus a new Code Flow logout button) -->
+      <div id="login-section" style="display: block">
         <p>Welcome! Please log in to continue.</p>
-        <button id="login-btn" class="btn" disabled>Log In</button>
+        <div class="row">
+          <button id="login-btn" class="btn" disabled>Log In</button>
+          <button id="login-code-btn" class="btn secondary" disabled>
+            Log In (Code Flow)
+          </button>
+          <!-- NEW: logout on the login screen -->
+          <button id="logout-code-btn" class="btn ghost" disabled>
+            Log Out
+          </button>
+        </div>
       </div>
 
-      <div id="user-section" style="display:none">
+      <div id="user-section" style="display: none">
         <div class="row">
-          <img id="user-avatar" class="user-avatar" src="" alt="User Avatar" style="display:none"/>
-          <span class="pill" id="auth-status" style="display:none">Authenticated</span>
+          <img
+            id="user-avatar"
+            class="user-avatar"
+            src=""
+            alt="User Avatar"
+            style="display: none"
+          />
+          <span class="pill" id="auth-status" style="display: none"
+            >Authenticated</span
+          >
         </div>
         <div id="user-details" class="kv"></div>
         <button id="logout-btn" class="btn secondary">Log Out</button>
       </div>
 
-      <div id="token-card" style="display:none">
-        <div class="row" style="justify-content:space-between;align-items:center">
-          <strong style="color:#4f46e5">Access Token</strong>
+      <div id="token-card" style="display: none">
+        <div
+          class="row"
+          style="justify-content: space-between; align-items: center"
+        >
+          <strong style="color: #4f46e5">Access Token</strong>
           <span class="muted">From <code>getAccessTokenSilently</code></span>
         </div>
-        <textarea id="access-token" readonly placeholder="access_token will appear here…"></textarea>
+        <textarea
+          id="access-token"
+          readonly
+          placeholder="access_token will appear here…"
+        ></textarea>
         <div class="row">
           <button id="copy-token" class="btn">Copy token</button>
-          <button id="toggle-visibility" class="btn secondary">Hide token</button>
-          <button id="refresh-token" class="btn secondary">Refresh token</button>
+          <button id="toggle-visibility" class="btn secondary">
+            Hide token
+          </button>
+          <button id="refresh-token" class="btn secondary">
+            Refresh token
+          </button>
         </div>
         <div id="token-meta" class="kv muted"></div>
+      </div>
+
+      <!-- NEW: Code Flow → Backend Payload Builder (no visible auth code, no auto-copy) -->
+      <div id="code-section" style="display: none" class="grid">
+        <div class="card grid">
+          <div
+            class="row"
+            style="justify-content: space-between; align-items: center"
+          >
+            <strong class="section-title">Backend Exchange Payload</strong>
+            <!-- RIGHT SIDE: hint + builder logout -->
+            <div class="row" style="gap: 0.5rem; align-items: center">
+              <span class="hint"
+                >Build a body for
+                <span class="nowrap">POST /auth/login</span></span
+              >
+              <!-- NEW: logout directly from the builder -->
+              <button id="builder-logout-btn" class="btn ghost">Log Out</button>
+            </div>
+          </div>
+
+          <div class="grid grid-2">
+            <div>
+              <label class="muted">Backend URL</label>
+              <input id="backend-url" type="url" value="/auth/login" />
+            </div>
+            <div>
+              <label class="muted">Redirect URI</label>
+              <input id="redirect-uri" type="url" />
+            </div>
+          </div>
+
+          <div class="grid grid-2">
+            <div>
+              <label class="muted">Audience (optional)</label>
+              <input id="audience" type="text" />
+            </div>
+            <div>
+              <label class="muted">code_verifier</label>
+              <input
+                id="code-verifier"
+                type="text"
+                placeholder="Will try to auto-fill from sessionStorage…"
+              />
+            </div>
+          </div>
+
+          <textarea
+            id="backend-payload"
+            readonly
+            placeholder='{"code":"(captured)","redirectUri":"...","codeVerifier":"...","audience":"..."}'
+          ></textarea>
+
+          <div class="row">
+            <button id="build-payload" class="btn">Build payload</button>
+            <button id="copy-payload" class="btn secondary">
+              Copy payload
+            </button>
+            <button id="send-backend" class="btn ghost">
+              Send to /auth/login
+            </button>
+          </div>
+
+          <div class="hint" id="code-hint"></div>
+
+          <label class="muted">Backend Response (copy-able)</label>
+          <textarea
+            id="backend-response"
+            readonly
+            placeholder="Backend response (e.g., 'Bearer &lt;access_token&gt;' or JSON) will appear here…"
+          ></textarea>
+          <div class="row">
+            <button id="copy-response" class="btn secondary">
+              Copy response
+            </button>
+            <button id="clear-response" class="btn secondary">
+              Clear response
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -88,21 +326,22 @@
         clientId: "Se42bQZpKpp6CKUZMHWEfALLwfmBFWhz",
         authorizationParams: {
           redirect_uri: window.location.origin + "/samplelogin.html",
-          // audience must be set to receive an API access token
+          // TIP: replace with your own API identifier (recommended)
           audience: "https://dev-18oi7pqgotwgjxzf.us.auth0.com/api/v2/",
-          // include scopes as needed for your API
-          scope: "openid profile email"
+          scope: "openid profile email",
         },
-        cacheLocation: "memory"
+        cacheLocation: "memory",
       };
       // -----------------------------------------------------------------------
 
+      const BACKEND_LOGIN_URL_DEFAULT = "/auth/login";
       let auth0Client = null;
 
-      // DOM refs
+      // DOM refs (original)
       const loginSection = document.getElementById("login-section");
       const userSection = document.getElementById("user-section");
       const loginBtn = document.getElementById("login-btn");
+      const loginCodeBtn = document.getElementById("login-code-btn");
       const logoutBtn = document.getElementById("logout-btn");
       const userAvatar = document.getElementById("user-avatar");
       const userDetails = document.getElementById("user-details");
@@ -116,24 +355,64 @@
       const tokenMeta = document.getElementById("token-meta");
       const authStatusPill = document.getElementById("auth-status");
 
+      // NEW button refs
+      const logoutCodeBtn = document.getElementById("logout-code-btn");
+      const builderLogoutBtn = document.getElementById("builder-logout-btn");
+
+      // NEW: code-flow builder refs
+      const codeSection = document.getElementById("code-section");
+      const backendUrlInput = document.getElementById("backend-url");
+      const redirectUriInput = document.getElementById("redirect-uri");
+      const audienceInput = document.getElementById("audience");
+      const codeVerifierInput = document.getElementById("code-verifier");
+      const backendPayloadTextarea = document.getElementById("backend-payload");
+      const backendResponseTextarea =
+        document.getElementById("backend-response");
+      const buildPayloadBtn = document.getElementById("build-payload");
+      const copyPayloadBtn = document.getElementById("copy-payload");
+      const sendBackendBtn = document.getElementById("send-backend");
+      const copyResponseBtn = document.getElementById("copy-response");
+      const clearResponseBtn = document.getElementById("clear-response");
+      const codeHint = document.getElementById("code-hint");
+
+      // Hidden captured values for code flow
+      let __auth_code = null;
+      let __auth_state = null;
+
       // ------------------ UI helpers ------------------
       let tokenVisible = true;
-      function renderToken(txt){
-        if (!txt) { tokenTextarea.value = ""; return; }
-        tokenTextarea.value = tokenVisible ? txt : (txt.length <= 12 ? "•••" : txt.slice(0,6) + "…" + txt.slice(-6));
+      function renderToken(txt) {
+        if (!txt) {
+          tokenTextarea.value = "";
+          return;
+        }
+        tokenTextarea.value = tokenVisible
+          ? txt
+          : txt.length <= 12
+          ? "•••"
+          : txt.slice(0, 6) + "…" + txt.slice(-6);
       }
-      async function copyToClipboard(text){
-        try { await navigator.clipboard.writeText(text); }
-        catch {
+      async function copyToClipboard(text) {
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch {
           const tmp = document.createElement("textarea");
-          tmp.value = text; document.body.appendChild(tmp); tmp.select();
-          try { document.execCommand("copy"); } finally { document.body.removeChild(tmp); }
+          tmp.value = text;
+          document.body.appendChild(tmp);
+          tmp.select();
+          try {
+            document.execCommand("copy");
+          } finally {
+            document.body.removeChild(tmp);
+          }
         }
       }
 
       toggleVisibilityBtn.addEventListener("click", () => {
         tokenVisible = !tokenVisible;
-        toggleVisibilityBtn.textContent = tokenVisible ? "Hide token" : "Show token";
+        toggleVisibilityBtn.textContent = tokenVisible
+          ? "Hide token"
+          : "Show token";
         renderToken(tokenTextarea.dataset.raw || "");
       });
       copyTokenBtn.addEventListener("click", async () => {
@@ -149,12 +428,132 @@
         try {
           const parts = (token || "").split(".");
           if (parts.length !== 3) return null;
-          const payload = JSON.parse(atob(parts[1].replace(/-/g, "+").replace(/_/g, "/")));
+          const payload = JSON.parse(
+            atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"))
+          );
           return payload || null;
-        } catch { return null; }
+        } catch {
+          return null;
+        }
       }
 
-      // ------------------ Auth flow ------------------
+      // ------------------ PKCE code_verifier discovery ------------------
+      function findCodeVerifierInSession(expectedState) {
+        try {
+          for (let i = 0; i < sessionStorage.length; i++) {
+            const k = sessionStorage.key(i);
+            if (!k) continue;
+            if (!k.startsWith("a0.spajs.txs")) continue;
+            try {
+              const raw = sessionStorage.getItem(k);
+              if (!raw) continue;
+              const parsed = JSON.parse(raw);
+              if (
+                parsed &&
+                typeof parsed === "object" &&
+                parsed.code_verifier
+              ) {
+                if (!expectedState || parsed.state === expectedState)
+                  return parsed.code_verifier;
+              }
+              if (parsed && typeof parsed === "object") {
+                for (const key of Object.keys(parsed)) {
+                  const tx = parsed[key];
+                  if (
+                    tx &&
+                    tx.code_verifier &&
+                    (!expectedState ||
+                      tx.state === expectedState ||
+                      key === expectedState)
+                  ) {
+                    return tx.code_verifier;
+                  }
+                }
+              }
+            } catch {}
+          }
+        } catch {}
+        return null;
+      }
+
+      function buildBackendPayload() {
+        if (!__auth_code) {
+          codeHint.innerHTML =
+            '<span class="bad">No authorization code captured. Use "Log In (Code Flow)" first.</span>';
+          backendPayloadTextarea.value = "";
+          return null;
+        }
+        const redirectUri = (redirectUriInput.value || "").trim();
+        const audience = (audienceInput.value || "").trim() || undefined;
+        let codeVerifier = (codeVerifierInput.value || "").trim();
+
+        if (!codeVerifier) {
+          codeVerifier =
+            findCodeVerifierInSession(__auth_state || undefined) ||
+            "MISSING_CODE_VERIFIER";
+          codeVerifierInput.value = codeVerifier;
+        }
+
+        const body = {
+          code: __auth_code,
+          redirectUri: redirectUri || undefined,
+          codeVerifier: codeVerifier || undefined,
+          audience,
+        };
+        Object.keys(body).forEach(
+          (k) => body[k] === undefined && delete body[k]
+        );
+        backendPayloadTextarea.value = JSON.stringify(body, null, 2);
+        codeHint.innerHTML =
+          '<span class="ok">Authorization code captured from redirect.</span>';
+        return body;
+      }
+
+      async function sendToBackend() {
+        const url = (backendUrlInput.value || BACKEND_LOGIN_URL_DEFAULT).trim();
+        if (!url) return alert("Enter backend URL.");
+        const payload = buildBackendPayload();
+        if (!payload) return;
+        if (!payload.redirectUri)
+          return alert("Payload must include `redirectUri`.");
+        sendBackendBtn.disabled = true;
+        sendBackendBtn.innerHTML = '<span class="loading"></span>Sending…';
+        try {
+          const r = await fetch(url, {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+              accept: "text/plain, application/json;q=0.9",
+            },
+            body: JSON.stringify(payload),
+            credentials: "include",
+          });
+          const text = await r.text();
+          backendResponseTextarea.value = text; // NOTE: no auto-copy
+        } catch (e) {
+          backendResponseTextarea.value = "Request failed. See console.";
+          console.error("sendToBackend error:", e);
+        } finally {
+          sendBackendBtn.disabled = false;
+          sendBackendBtn.innerHTML = "Send to /auth/login";
+        }
+      }
+
+      buildPayloadBtn.addEventListener("click", buildBackendPayload);
+      copyPayloadBtn.addEventListener("click", async () => {
+        const val = backendPayloadTextarea.value || "";
+        if (val) await copyToClipboard(val);
+      });
+      sendBackendBtn.addEventListener("click", sendToBackend);
+      copyResponseBtn.addEventListener("click", async () => {
+        const val = backendResponseTextarea.value || "";
+        if (val) await copyToClipboard(val);
+      });
+      clearResponseBtn.addEventListener("click", () => {
+        backendResponseTextarea.value = "";
+      });
+
+      // ------------------ Auth flow (original) ------------------
       async function showUserSection() {
         try {
           const user = await auth0Client.getUser();
@@ -163,7 +562,8 @@
           authStatusPill.style.display = "inline-block";
 
           if (user.picture) {
-            userAvatar.src = user.picture; userAvatar.style.display = "block";
+            userAvatar.src = user.picture;
+            userAvatar.style.display = "block";
           } else {
             userAvatar.style.display = "none";
           }
@@ -171,7 +571,9 @@
           userDetails.innerHTML = `
             <div><strong>Name:</strong> ${user.name || "-"}</div>
             <div><strong>Email:</strong> ${user.email || "-"}</div>
-            <div><strong>Email Verified:</strong> ${user.email_verified ? "Yes" : "No"}</div>
+            <div><strong>Email Verified:</strong> ${
+              user.email_verified ? "Yes" : "No"
+            }</div>
             <div><strong>Sub:</strong> ${user.sub || "-"}</div>
           `;
 
@@ -183,58 +585,63 @@
         }
       }
 
-      function showLoginSection(){
+      function showLoginSection() {
         loginSection.style.display = "block";
         userSection.style.display = "none";
         tokenCard.style.display = "none";
       }
 
-      // --------- Access Token retrieval (forces access_token, not id_token) ---------
+      // --------- Access Token retrieval (original) ---------
       async function fetchAndShowToken(forceRefresh) {
         try {
-          // Prefer explicit access-token method when available
-          const getAccess = auth0Client.getAccessTokenSilently || auth0Client.getTokenSilently;
-
+          const getAccess =
+            auth0Client.getAccessTokenSilently || auth0Client.getTokenSilently;
           let result = await getAccess.call(auth0Client, {
             detailedResponse: true,
             cacheMode: forceRefresh ? "off" : "on",
             authorizationParams: {
               audience: auth0Config.authorizationParams?.audience,
-              scope: auth0Config.authorizationParams?.scope || "openid profile email"
-            }
+              scope:
+                auth0Config.authorizationParams?.scope ||
+                "openid profile email",
+            },
           });
 
-          // Support both shapes (object vs string)
           let accessToken = "";
           let meta = {};
           if (typeof result === "string") {
-            accessToken = result; // some SDKs return raw string if detailedResponse not honored
+            accessToken = result;
             meta = { token_type: "Bearer", scope: "", expires_in: "" };
           } else if (result && typeof result === "object") {
             accessToken = result.access_token || "";
             meta = {
               token_type: result.token_type || "Bearer",
               scope: result.scope || "",
-              expires_in: result.expires_in || ""
+              expires_in: result.expires_in || "",
             };
-            // Fallback retry if we somehow only got an id_token back
             if (!accessToken && result.id_token) {
               const fallback = await getAccess.call(auth0Client, {
                 cacheMode: forceRefresh ? "off" : "on",
                 authorizationParams: {
                   audience: auth0Config.authorizationParams?.audience,
-                  scope: auth0Config.authorizationParams?.scope || "openid profile email"
-                }
+                  scope:
+                    auth0Config.authorizationParams?.scope ||
+                    "openid profile email",
+                },
               });
               if (typeof fallback === "string") accessToken = fallback;
             }
           }
 
-          if (!accessToken) throw new Error("No access_token returned. Check audience/scopes.");
+          if (!accessToken)
+            throw new Error("No access_token returned. Check audience/scopes.");
 
-          // Heuristic warning if this looks like an ID token
           const payload = decodeJwtPayload(accessToken);
-          const looksLikeIdToken = !!(payload && (payload.nonce || payload.email) && !meta.scope);
+          const looksLikeIdToken = !!(
+            payload &&
+            (payload.nonce || payload.email) &&
+            !meta.scope
+          );
           const warnText = looksLikeIdToken
             ? " (warning: this looks like an ID token — check audience)"
             : "";
@@ -243,18 +650,20 @@
           tokenTextarea.dataset.raw = accessToken;
           renderToken(accessToken);
 
-          const expAt = meta.expires_in ? new Date(Date.now() + meta.expires_in * 1000) : null;
+          const expAt = meta.expires_in
+            ? new Date(Date.now() + meta.expires_in * 1000)
+            : null;
           tokenMeta.textContent =
             `type=${meta.token_type} | scope=${meta.scope || "-"} | ` +
             `expires_in=${meta.expires_in || "-"}s` +
             (expAt ? ` (~${expAt.toLocaleString()})` : "") +
             warnText;
-
         } catch (err) {
           tokenCard.style.display = "block";
           tokenTextarea.dataset.raw = "";
           renderToken("");
-          tokenMeta.textContent = "Failed to get access_token. Verify API Audience and Allowed Web Origins.";
+          tokenMeta.textContent =
+            "Failed to get access_token. Verify API Audience and Allowed Web Origins.";
           console.error("fetchAndShowToken error:", err);
         }
       }
@@ -262,43 +671,123 @@
       // ------------------ Login/Logout ------------------
       async function login() {
         try {
-          if (!auth0Client) { alert("Auth0 not initialized. Refresh and check config."); return; }
+          if (!auth0Client) {
+            alert("Auth0 not initialized. Refresh and check config.");
+            return;
+          }
+          // Ensure normal SPA flow isn't affected by prior code-only runs
+          try {
+            sessionStorage.removeItem("code_only_mode");
+          } catch {}
+
           loginBtn.disabled = true;
           loginBtn.innerHTML = '<span class="loading"></span>Logging in…';
           await auth0Client.loginWithRedirect();
         } catch (error) {
           console.error("Login error:", error);
-          loginBtn.disabled = false; loginBtn.innerHTML = "Log In";
+          loginBtn.disabled = false;
+          loginBtn.innerHTML = "Log In";
           alert("Login failed. See console for details.");
         }
       }
-      async function logout() {
+
+      async function loginWithCodeFlow() {
         try {
-          if (!auth0Client) return;
-          logoutBtn.disabled = true;
-          logoutBtn.innerHTML = '<span class="loading"></span>Logging out…';
-          await auth0Client.logout({ logoutParams: { returnTo: window.location.origin } });
+          if (!auth0Client) {
+            alert("Auth0 not initialized. Refresh and check config.");
+            return;
+          }
+          loginCodeBtn.disabled = true;
+          loginCodeBtn.innerHTML = '<span class="loading"></span>Logging in…';
+          try {
+            sessionStorage.setItem("code_only_mode", "1");
+          } catch {}
+          await auth0Client.loginWithRedirect({
+            authorizationParams: {
+              audience: auth0Config.authorizationParams?.audience,
+              scope:
+                auth0Config.authorizationParams?.scope ||
+                "openid profile email",
+              response_type: "code",
+              redirect_uri:
+                auth0Config.authorizationParams?.redirect_uri ||
+                window.location.origin + "/samplelogin.html",
+            },
+          });
+        } catch (error) {
+          console.error("Code Flow login error:", error);
+          loginCodeBtn.disabled = false;
+          loginCodeBtn.innerHTML = "Log In (Code Flow)";
+          alert("Login failed. See console for details.");
+        }
+      }
+
+      // NEW: unified logout helper used by both logout buttons
+      async function performLogout(spinnerBtn) {
+        try {
+          if (!auth0Client) {
+            alert("Auth0 not initialized. Refresh and check config.");
+            return;
+          }
+          // Clear code-only mode to avoid sticky behavior on next login
+          try {
+            sessionStorage.removeItem("code_only_mode");
+          } catch {}
+
+          if (spinnerBtn) {
+            spinnerBtn.disabled = true;
+            const prevText = spinnerBtn.textContent;
+            spinnerBtn.dataset.prevText = prevText;
+            spinnerBtn.innerHTML = '<span class="loading"></span>Logging out…';
+          }
+
+          await auth0Client.logout({
+            logoutParams: { returnTo: window.location.origin },
+            // If you also want upstream IdP SSO logout:
+            federated: true
+          });
         } catch (error) {
           console.error("Logout error:", error);
-          logoutBtn.disabled = false; logoutBtn.innerHTML = "Log Out";
+          if (spinnerBtn) {
+            spinnerBtn.disabled = false;
+            spinnerBtn.innerHTML = spinnerBtn.dataset.prevText || "Log Out";
+          }
           alert("Logout failed. Please try again.");
         }
       }
 
+      // Keep original API for existing user-section button
+      async function logout() {
+        await performLogout(logoutBtn);
+      }
+
+      // Events
       loginBtn.addEventListener("click", login);
+      loginCodeBtn.addEventListener("click", loginWithCodeFlow);
       logoutBtn.addEventListener("click", logout);
+      logoutCodeBtn.addEventListener("click", () =>
+        performLogout(logoutCodeBtn)
+      );
+      builderLogoutBtn?.addEventListener("click", () =>
+        performLogout(builderLogoutBtn)
+      );
 
       // ------------------ Init ------------------
       async function initAuth0() {
         try {
           loadingDiv.style.display = "block";
           loginBtn.disabled = true;
+          loginCodeBtn.disabled = true;
+          logoutCodeBtn.disabled = true;
+          if (builderLogoutBtn) builderLogoutBtn.disabled = true;
 
           if (
             auth0Config.domain.includes("YOUR_AUTH0_DOMAIN") ||
             auth0Config.clientId.includes("YOUR_AUTH0_CLIENT_ID")
           ) {
-            console.error("Configuration not set! Update auth0Config with your actual Auth0 Domain and Client ID.");
+            console.error(
+              "Configuration not set! Update auth0Config with your actual Auth0 Domain and Client ID."
+            );
             configWarningDiv.style.display = "block";
             return;
           }
@@ -307,8 +796,59 @@
 
           const query = window.location.search;
           if (query.includes("code=") && query.includes("state=")) {
+            const params = new URLSearchParams(query);
+            const code = params.get("code");
+            const state = params.get("state");
+            const codeOnly = (() => {
+              try {
+                return sessionStorage.getItem("code_only_mode") === "1";
+              } catch {
+                return false;
+              }
+            })();
+
+            if (code && codeOnly) {
+              // Capture for builder
+              __auth_code = code;
+              __auth_state = state || null;
+
+              // Prefill builder inputs
+              backendUrlInput.value = BACKEND_LOGIN_URL_DEFAULT;
+              redirectUriInput.value =
+                auth0Config.authorizationParams?.redirect_uri ||
+                window.location.origin + "/samplelogin.html";
+              audienceInput.value =
+                auth0Config.authorizationParams?.audience || "";
+              const autoVerifier =
+                findCodeVerifierInSession(__auth_state || undefined) || "";
+              if (autoVerifier) codeVerifierInput.value = autoVerifier;
+
+              // Show builder (no visible auth code)
+              loginSection.style.display = "none";
+              userSection.style.display = "none";
+              tokenCard.style.display = "none";
+              codeSection.style.display = "block";
+
+              // Enable builder logout now that client is ready
+              if (builderLogoutBtn) builderLogoutBtn.disabled = false;
+
+              // Clean URL
+              const cleanUrl =
+                window.location.origin + window.location.pathname;
+              window.history.replaceState({}, document.title, cleanUrl);
+
+              // Pre-build payload (no auto-copy)
+              buildBackendPayload();
+              return; // do NOT call handleRedirectCallback in code-only mode
+            }
+
+            // Default SPA flow
             await auth0Client.handleRedirectCallback();
-            window.history.replaceState({}, document.title, window.location.pathname);
+            window.history.replaceState(
+              {},
+              document.title,
+              window.location.pathname
+            );
           }
 
           const isAuthenticated = await auth0Client.isAuthenticated();
@@ -320,10 +860,17 @@
         } catch (error) {
           console.error("Auth0 initialization error:", error);
           configWarningDiv.style.display = "block";
-          alert("Authentication initialization failed. Check configuration and network. Details in console.");
+          alert(
+            "Authentication initialization failed. Check configuration and network. Details in console."
+          );
         } finally {
           loadingDiv.style.display = "none";
-          if (configWarningDiv.style.display === "none") loginBtn.disabled = false;
+          if (configWarningDiv.style.display === "none") {
+            loginBtn.disabled = false;
+            loginCodeBtn.disabled = false;
+            logoutCodeBtn.disabled = false;
+            if (builderLogoutBtn) builderLogoutBtn.disabled = false;
+          }
         }
       }
 
