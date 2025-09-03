@@ -328,7 +328,7 @@
           redirect_uri: window.location.origin + "/samplelogin.html",
           // TIP: replace with your own API identifier (recommended)
           audience: "https://dev-18oi7pqgotwgjxzf.us.auth0.com/api/v2/",
-          scope: "openid profile email",
+          scope: "openid profile email offline_access",
         },
         cacheLocation: "memory",
       };
@@ -706,8 +706,7 @@
             authorizationParams: {
               audience: auth0Config.authorizationParams?.audience,
               scope:
-                auth0Config.authorizationParams?.scope ||
-                "openid profile email",
+                auth0Config.authorizationParams?.scope,
               response_type: "code",
               redirect_uri:
                 auth0Config.authorizationParams?.redirect_uri ||
