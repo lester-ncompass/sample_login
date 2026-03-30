@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -322,13 +322,13 @@
     <script>
       // ------------------ Auth0 Configuration (UPDATE THESE) ------------------
       const auth0Config = {
-        domain: "dev-18oi7pqgotwgjxzf.us.auth0.com",
-        clientId: "Se42bQZpKpp6CKUZMHWEfALLwfmBFWhz",
+        domain: "dev-e64sjjvsntw2i5a2.us.auth0.com",
+        clientId: "QYJzGGgCAyz51d2noULXBeIwyQqZhdHP",
         authorizationParams: {
           redirect_uri: window.location.origin + "/samplelogin.html",
           // TIP: replace with your own API identifier (recommended)
-          audience: "https://dev-18oi7pqgotwgjxzf.us.auth0.com/api/v2/",
-          scope: "openid profile email offline_access",
+          audience: "https://dev-e64sjjvsntw2i5a2.us.auth0.com/api/v2/",
+          scope: "openid profile email",
         },
         cacheLocation: "memory",
       };
@@ -389,8 +389,8 @@
         tokenTextarea.value = tokenVisible
           ? txt
           : txt.length <= 12
-          ? "•••"
-          : txt.slice(0, 6) + "…" + txt.slice(-6);
+            ? "•••"
+            : txt.slice(0, 6) + "…" + txt.slice(-6);
       }
       async function copyToClipboard(text) {
         try {
@@ -429,7 +429,7 @@
           const parts = (token || "").split(".");
           if (parts.length !== 3) return null;
           const payload = JSON.parse(
-            atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"))
+            atob(parts[1].replace(/-/g, "+").replace(/_/g, "/")),
           );
           return payload || null;
         } catch {
@@ -501,7 +501,7 @@
           audience,
         };
         Object.keys(body).forEach(
-          (k) => body[k] === undefined && delete body[k]
+          (k) => body[k] === undefined && delete body[k],
         );
         backendPayloadTextarea.value = JSON.stringify(body, null, 2);
         codeHint.innerHTML =
@@ -705,8 +705,7 @@
           await auth0Client.loginWithRedirect({
             authorizationParams: {
               audience: auth0Config.authorizationParams?.audience,
-              scope:
-                auth0Config.authorizationParams?.scope,
+              scope: auth0Config.authorizationParams?.scope,
               response_type: "code",
               redirect_uri:
                 auth0Config.authorizationParams?.redirect_uri ||
@@ -743,7 +742,7 @@
           await auth0Client.logout({
             logoutParams: { returnTo: window.location.origin },
             // If you also want upstream IdP SSO logout:
-            federated: true
+            federated: true,
           });
         } catch (error) {
           console.error("Logout error:", error);
@@ -765,10 +764,10 @@
       loginCodeBtn.addEventListener("click", loginWithCodeFlow);
       logoutBtn.addEventListener("click", logout);
       logoutCodeBtn.addEventListener("click", () =>
-        performLogout(logoutCodeBtn)
+        performLogout(logoutCodeBtn),
       );
       builderLogoutBtn?.addEventListener("click", () =>
-        performLogout(builderLogoutBtn)
+        performLogout(builderLogoutBtn),
       );
 
       // ------------------ Init ------------------
@@ -785,7 +784,7 @@
             auth0Config.clientId.includes("YOUR_AUTH0_CLIENT_ID")
           ) {
             console.error(
-              "Configuration not set! Update auth0Config with your actual Auth0 Domain and Client ID."
+              "Configuration not set! Update auth0Config with your actual Auth0 Domain and Client ID.",
             );
             configWarningDiv.style.display = "block";
             return;
@@ -846,7 +845,7 @@
             window.history.replaceState(
               {},
               document.title,
-              window.location.pathname
+              window.location.pathname,
             );
           }
 
@@ -860,7 +859,7 @@
           console.error("Auth0 initialization error:", error);
           configWarningDiv.style.display = "block";
           alert(
-            "Authentication initialization failed. Check configuration and network. Details in console."
+            "Authentication initialization failed. Check configuration and network. Details in console.",
           );
         } finally {
           loadingDiv.style.display = "none";
